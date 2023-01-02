@@ -35,11 +35,3 @@ func TestGameGoodGuess(t *testing.T) {
 	g.MakeAGuess("b")
 	validState(t, GoodGuess, g.State)
 }
-
-func validState(t *testing.T, expectedState, actualState GameStateType) bool {
-	if expectedState != actualState {
-		t.Errorf("state should be '%v', got=%v", expectedState, actualState)
-		return false
-	}
-	return true
-}
