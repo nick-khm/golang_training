@@ -5,10 +5,18 @@ import (
 	"os"
 
 	"training.go/hangman/hangman"
+	"training.go/hangman/hangman/dictionary"
 )
 
 func main() {
-	g := hangman.New(6, "Golang")
+	err := dictionary.Load("./hangman/words.txt")
+	if err != nil {
+		fmt.Printf("Some dict error %v\n", err)
+		os.Exit(1)
+	}
+	word := dictionary.PickWord()
+
+	g := hangman.New(6, word)
 	hangman.DrawWelcome()
 
 	guess := ""
