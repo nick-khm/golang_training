@@ -2,23 +2,37 @@ package main
 
 import "fmt"
 
+type User struct {
+	name string
+}
+
 func main() {
-	m := map[string]int{
-		"Bob":     11,
-		"Alice":   22,
-		"Bobette": 33,
-	}
-	fmt.Printf("m=%v\n", m)
-
-	for name, age := range m {
-		fmt.Printf("name=%s age=%v\n", name, age)
+	m := map[string]*User{
+		"HR":  {"Bob"},
+		"CEO": {"Alice"},
 	}
 
-	i := 1
-	for name := range m {
-		m[name] = i
-		i++
-	}
 	fmt.Printf("m=%v\n", m)
+	for key, value := range m {
+		fmt.Printf("key=%v val=%v\n", key, value)
+	}
+	hr := m["HR"]
+	hr.name = "TOTO"
+	fmt.Printf("hr=%v\n", hr)
+	fmt.Printf("m=%v\n", m)
+	for key, value := range m {
+		fmt.Printf("key=%v val=%v\n", key, value)
+	}
+
+	m2 := m
+	m2["HR"] = &User{"Yolo"}
+	fmt.Printf("m=%v\n", m)
+	for key, value := range m {
+		fmt.Printf("key=%v val=%v\n", key, value)
+	}
+	fmt.Printf("m2=%v\n", m2)
+	for key, value := range m2 {
+		fmt.Printf("key=%v val=%v\n", key, value)
+	}
 
 }
