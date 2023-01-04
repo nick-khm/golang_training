@@ -6,6 +6,11 @@ type User struct {
 	name string
 }
 
+type Key struct {
+	ID   int
+	Name string
+}
+
 func main() {
 	m := map[string]*User{
 		"HR":  {"Bob"},
@@ -34,5 +39,15 @@ func main() {
 	for key, value := range m2 {
 		fmt.Printf("key=%v val=%v\n", key, value)
 	}
+
+	resourceWeb := make(map[Key]string)
+	resourceWeb[Key{1, "azerty"}] = "file1"
+
+	k := Key{2, "toto"}
+	resourceWeb[k] = "file2"
+
+	delete(resourceWeb, Key{1, "azerty"})
+
+	fmt.Println(resourceWeb)
 
 }
