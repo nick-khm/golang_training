@@ -11,6 +11,12 @@ func main() {
 	d, err := dictionary.New("./badger")
 	handleError(err)
 	defer d.Close()
+
+	d.Add("golang", "A wonderful language!")
+	entry, err := d.Get("golang")
+	handleError(err)
+	fmt.Println(entry)
+
 }
 
 func handleError(e error) {
