@@ -74,13 +74,12 @@ func (d *Dictionary) List() ([]string, map[string]Entry, error) {
 		return nil
 	})
 	return sortedKeys(entries), entries, err
-	// var entries Entry[]
-	// err := d.db.View(func(txn *badger.Txn) error {
-	// 	list, err := txn.Get([]byte{})
-	// 	if err != nil {
-	// 		return err
-	// 	}
-	// })
+}
+
+func (d *Dictionary) Remove(word string) error {
+	return d.db.Update(func(txn *badger.Txn) error {
+		return txn.Delete([]byte(word))
+	})
 }
 
 func sortedKeys(entries map[string]Entry) []string {

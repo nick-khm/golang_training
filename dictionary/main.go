@@ -12,8 +12,7 @@ func main() {
 	handleError(err)
 	defer d.Close()
 
-	d.Add("Python", "Great language")
-	// entry, err := d.Get("golang")
+	d.Remove("toto")
 	words, entries, err := d.List()
 	handleError(err)
 	for _, word := range words {
