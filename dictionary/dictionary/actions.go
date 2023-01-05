@@ -3,6 +3,7 @@ package dictionary
 import (
 	"bytes"
 	"encoding/gob"
+	"sort"
 	"strings"
 	"time"
 
@@ -53,4 +54,40 @@ func getEntry(item *badger.Item) (Entry, error) {
 	dec := gob.NewDecoder(&buffer)
 	err = dec.Decode(&entry)
 	return entry, err
+}
+
+func (d *Dictionary) List() ([]string, map[string]Entry, error) {
+	entries := make(map[string]Entry)
+	err := d.db.View(func(txn *badger.Txn) error {
+		opts := badger.DefaultIteratorOptions
+		opts.PrefetchSize = 10
+		it := txn.NewIterator(opts)
+		defer it.Close()
+		for it.Rewind(); it.Valid(); it.Next() {
+			item := it.Item()
+			entry, err := getEntry(item)
+			if err != nil {
+				return err
+			}
+			entries[entry.Word] = entry
+		}
+		return nil
+	})
+	return sortedKeys(entries), entries, err
+	// var entries Entry[]
+	// err := d.db.View(func(txn *badger.Txn) error {
+	// 	list, err := txn.Get([]byte{})
+	// 	if err != nil {
+	// 		return err
+	// 	}
+	// })
+}
+
+func sortedKeys(entries map[string]Entry) []string {
+	keys := make([]string, len(entries))
+	for key := range entries {
+		keys = append(keys, key)
+	}
+	sort.Strings(keys)
+	return keys
 }
