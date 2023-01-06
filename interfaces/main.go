@@ -2,46 +2,60 @@ package main
 
 import "fmt"
 
-type Instrument interface {
-	Play()
+type Animal interface {
+	Speak() string
 }
 
-type Amplifier interface {
-	Connect(amp string)
+type Dog struct {
+	color string
 }
 
-type Guitar struct {
-	Strings int
+func (d Dog) Speak() string {
+	return "Dog saying"
 }
 
-type Piano struct {
-	Keys int
+type Cat struct {
+	jumpHeight int
 }
 
-func (g Guitar) Play() {
-	fmt.Printf("Guitar plays with %d strings\n", g.Strings)
-}
-
-func (g Guitar) Connect(amp string) {
-	fmt.Printf("Connected to %v\n", amp)
-}
-
-func (p Piano) Play() {
-	fmt.Printf("Piano plays with %d strings\n", p.Keys)
+func (c Cat) Speak() string {
+	return "Cat saying"
 }
 
 func main() {
-	var instr Instrument
-	instr = &Guitar{5}
-	instr.Play()
+	animals := []Animal{
+		Dog{"white"},
+		Cat{2},
+	}
 
-	instr = &Piano{90}
-	instr.Play()
+	for _, animal := range animals {
+		fmt.Println(animal.Speak())
+		fmt.Printf("Type of animal %T\n", animal)
 
-	var amp Amplifier = &Guitar{7}
-	amp.Connect("Ibanez")
+		// type assection
+		// instType, ok := animal.(Dog)
+		// fmt.Printf("Type assection value=%v, ok=%v\n", instType, ok)
+		// == THE SAME THING BELOW
+		if instType, ok := animal.(Dog); ok {
+			fmt.Printf("We have a dog! color=%v\n", instType.color)
+		} else {
+			fmt.Println("It's not a dog here...")
+		}
 
-	g := Guitar{12}
-	g.Play()
-	g.Connect("Marshall")
+	}
+
+	fmt.Println("------------------")
+
+	for _, animal := range animals {
+		describeAnimal(animal)
+	}
+}
+
+func describeAnimal(animal Animal) {
+	switch v := animal.(type) {
+	case Dog:
+		fmt.Printf("This is a dog; color=%v\n", v.color)
+	case Cat:
+		fmt.Printf("This is a cat; jumpHeight=%v\n", v.jumpHeight)
+	}
 }
