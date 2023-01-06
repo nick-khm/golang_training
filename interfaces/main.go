@@ -2,60 +2,55 @@ package main
 
 import "fmt"
 
-type Animal interface {
-	Speak() string
+type Person struct {
+	Name string
+	Age  int
 }
 
-type Dog struct {
-	color string
+type Cooker interface {
+	Cook()
 }
 
-func (d Dog) Speak() string {
-	return "Dog saying"
+type Chef struct {
+	Person
+	Stars int
 }
 
-type Cat struct {
-	jumpHeight int
-}
-
-func (c Cat) Speak() string {
-	return "Cat saying"
+func (c Chef) Cook() {
+	fmt.Printf("I'm cooking with %v start\n", c.Stars)
 }
 
 func main() {
-	animals := []Animal{
-		Dog{"white"},
-		Cat{2},
+	var x interface{} = Person{"Bob", 10}
+	fmt.Printf("x type=%T, data=%v\n", x, x)
+
+	// always need to test with "ok" while casting variable
+	s, ok := x.(string)
+	fmt.Printf("Person as string ok? %v. value='%v'\n", ok, s)
+
+	i, ok := x.(int)
+	fmt.Printf("Person as int ok? %v. value='%v'\n", ok, i)
+
+	processPerson(x)
+
+	x = Chef{
+		Person: Person{"Toto", 33},
+		Stars:  5,
 	}
 
-	for _, animal := range animals {
-		fmt.Println(animal.Speak())
-		fmt.Printf("Type of animal %T\n", animal)
-
-		// type assection
-		// instType, ok := animal.(Dog)
-		// fmt.Printf("Type assection value=%v, ok=%v\n", instType, ok)
-		// == THE SAME THING BELOW
-		if instType, ok := animal.(Dog); ok {
-			fmt.Printf("We have a dog! color=%v\n", instType.color)
-		} else {
-			fmt.Println("It's not a dog here...")
-		}
-
-	}
-
-	fmt.Println("------------------")
-
-	for _, animal := range animals {
-		describeAnimal(animal)
-	}
+	processPerson(x)
+	processPerson(5)
+	processPerson("John")
 }
 
-func describeAnimal(animal Animal) {
-	switch v := animal.(type) {
-	case Dog:
-		fmt.Printf("This is a dog; color=%v\n", v.color)
-	case Cat:
-		fmt.Printf("This is a cat; jumpHeight=%v\n", v.jumpHeight)
+func processPerson(i interface{}) {
+	switch p := i.(type) {
+	case Person:
+		fmt.Printf("We have a person=%v\n", p)
+	case Chef:
+		fmt.Printf("We have a chef=%v, let him cook\n", p)
+		p.Cook()
+	default:
+		fmt.Printf("Unknown type=%T, value=%v\n", p, p)
 	}
 }
