@@ -34,7 +34,10 @@ func New(course, name, date string) (*Cert, error) {
 	if err != nil {
 		return nil, err
 	}
-	d, e := parseDate(date)
+	d, err := parseDate(date)
+	if err != nil {
+		return nil, err
+	}
 
 	cert := &Cert{
 		Course:             c,
