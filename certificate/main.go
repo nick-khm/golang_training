@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
+
 	"os"
 
 	"training.go/certificate/cert"
-	"training.go/certificate/pdf"
+	"training.go/certificate/cert/html"
 )
 
 func main() {
@@ -16,7 +17,7 @@ func main() {
 	}
 
 	var saver cert.Saver
-	saver, err = pdf.New("output")
+	saver, err = html.New("output")
 	if err != nil {
 		fmt.Printf("Error during pdf creation: %v", err)
 		os.Exit(1)
