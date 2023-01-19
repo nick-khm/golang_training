@@ -17,6 +17,7 @@ func main() {
 
 	var saver cert.Saver
 	var err error
+
 	switch *outputType {
 	case "html":
 		saver, err = html.New("output")
@@ -31,11 +32,17 @@ func main() {
 		os.Exit(1)
 	}
 
-	c, err := cert.New("Golang programming", "Bob Dylan", "2023-01-11")
+	result, err := cert.ParseCSV("students.csv")
 	if err != nil {
-		fmt.Printf("Error during certificate creation: %v", err)
+		fmt.Printf("Error %v", err)
 		os.Exit(1)
 	}
-	saver.Save(*c)
+	for _, item := range result {
+
+		err = saver.Save(*item)
+		if err != nil {
+			fmt.Printf("Error %v", err)
+		}
+	}
 
 }
