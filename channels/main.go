@@ -25,11 +25,23 @@ func print(c chan string) {
 	}
 }
 
+func one() {
+	fmt.Println("one")
+}
+
+func hello(c chan string) {
+	c <- "Hello there" // blocked until red by someone else
+	fmt.Println("hello: finised")
+	fmt.Printf("hello: %v\n", <-c)
+}
+
 func main() {
 	c := make(chan string)
-	go ping(c)
-	go pong(c)
-	go print(c)
+
+	go hello(c)
+	msg := <-c
+	fmt.Printf("main %v\n", msg)
+	c <- "Main are writing"
 
 	time.Sleep(10 * time.Second)
 }
