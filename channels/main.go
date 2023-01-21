@@ -5,17 +5,22 @@ import (
 	"time"
 )
 
-func longOperation(done chan<- bool) {
-	fmt.Println("longOperation: Started long operation...")
-	time.Sleep(2 * time.Second)
-	fmt.Println("longOperation: Done!")
-	done <- true
+func reader(c chan string) {
+	fmt.Println("Start read")
+	defer fmt.Println("Stop read")
+	for n := range c {
+		fmt.Println(n)
+	}
 }
 
 func main() {
-	done := make(chan bool)
-	go longOperation(done)
-	<-done
-	fmt.Println("Back to main")
+	c := make(chan string)
+	go reader(c)
+
+	c <- "Bob"
+	c <- "Alice"
+	close(c)
+
+	time.Sleep(5 * time.Second)
 
 }
